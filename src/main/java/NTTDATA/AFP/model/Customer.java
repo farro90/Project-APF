@@ -27,7 +27,7 @@ public class Customer {
     private String lastnames;
 
     //@Schema(description = "Customer DNI")
-    @Pattern(regexp = "^[0-9]*$")
+    @Pattern(regexp = "^[0-9]*$", message = "DNI must contain only numeric digits.")
     @Size(min = 8, max = 8, message = "DNI must have 8 digits.")
     @Column(name = "dni", nullable = false, length = 8, unique = true)
     private String dni;

@@ -1,5 +1,6 @@
 package NTTDATA.AFP.api;
 
+import NTTDATA.AFP.exception.ModelNotFoundException;
 import NTTDATA.AFP.model.Afp;
 import NTTDATA.AFP.model.Customer;
 import NTTDATA.AFP.service.AfpService;
@@ -28,8 +29,7 @@ public class AfpApi {
     public ResponseEntity<Afp> findById(@PathVariable("id") long id){
         Afp afp = afpService.findById(id);
         if(afp.getId() == 0){
-            //throw new ModeloNotFoundException("ID no encontrado");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ModelNotFoundException("ID not found.");
         }
         return ResponseEntity.ok(afp);
     }

@@ -1,5 +1,6 @@
 package NTTDATA.AFP.api;
 
+import NTTDATA.AFP.exception.ModelNotFoundException;
 import NTTDATA.AFP.model.Request;
 import NTTDATA.AFP.model.bo.ValidateAfp;
 import NTTDATA.AFP.model.bo.ValidateAmount;
@@ -40,36 +41,31 @@ public class RequestApi {
                     ValidateAmount validateAmount = new ValidateAmount(request.getDni(), request.getAmount());
                     short responseValidateAmount = requestService.validateAmount(validateAmount);
                     if(responseValidateAmount == 1){
-                        log.info("The request cannot be registered. Amount greater than allowed.");
-                        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                        throw new ModelNotFoundException("The request cannot be registered. Amount greater than allowed.");
                     }else if(responseValidateAmount == -1){
-                        log.info("Minimum amount not covered please check the minimum amount to withdraw.");
-                        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                        throw new ModelNotFoundException("Minimum amount not covered please check the minimum amount to withdraw.");
                     }else{
                         Request response = requestService.create(request);
+                        log.info("Request registered successfully.");
                         return new ResponseEntity<Request>(response, HttpStatus.CREATED);
                     }
                 }else{
-                    log.info("DNI does not belong to this AFP.");
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    throw new ModelNotFoundException("DNI does not belong to this AFP.");
                 }
 
             }else{
-                log.info("DNI not found.");
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                throw new ModelNotFoundException("DNI not found.");
             }
         }else{
-            log.info("There is already a request with this DNI.");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ModelNotFoundException("There is already a request with this DNI.");
         }
     }
 
     @PutMapping
     public ResponseEntity<Request> update(@Valid @RequestBody Request request){
         Request requestExists = requestService.findById(request.getId());
-        if(request.getId() == 0){
-            //throw new ModeloNotFoundException("ID no encontrado");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if(requestExists.getId() == 0){
+            throw new ModelNotFoundException("ID not found.");
         }
         Request response = requestService.update(request);
         return ResponseEntity.ok(response);
@@ -79,8 +75,7 @@ public class RequestApi {
     public ResponseEntity<Request> findById(@PathVariable("id") long id){
         Request request = requestService.findById(id);
         if(request.getId() == 0){
-            //throw new ModeloNotFoundException("ID no encontrado");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ModelNotFoundException("ID not found.");
         }
         return ResponseEntity.ok(request);
     }
@@ -89,8 +84,7 @@ public class RequestApi {
     public ResponseEntity<Void> delete(@PathVariable("id") long id){
         Request request = requestService.findById(id);
         if(request.getId() == 0){
-            //throw new ModeloNotFoundException("ID no encontrado");
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new ModelNotFoundException("ID not found.");
         }
         requestService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
