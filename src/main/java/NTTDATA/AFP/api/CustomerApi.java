@@ -29,6 +29,11 @@ public class CustomerApi {
 
     @PutMapping
     public ResponseEntity<Customer> update(@Valid @RequestBody Customer customer){
+        Customer customerExists = customerService.findById(customer.getId());
+        if(customerExists.getId() == 0){
+            //throw new ModeloNotFoundException("ID no encontrado");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Customer response = customerService.update(customer);
         return ResponseEntity.ok(response);
     }

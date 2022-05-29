@@ -51,6 +51,11 @@ public class RequestApi {
 
     @PutMapping
     public ResponseEntity<Request> update(@Valid @RequestBody Request request){
+        Request requestExists = requestService.findById(request.getId());
+        if(request.getId() == 0){
+            //throw new ModeloNotFoundException("ID no encontrado");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Request response = requestService.update(request);
         return ResponseEntity.ok(response);
     }
