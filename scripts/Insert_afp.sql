@@ -1,0 +1,3 @@
+INSERT INTO public.afp
+("name")
+VALUES('PRIMA'),('INTEGRA'),('PROFUTURO'),('HABITAT');
