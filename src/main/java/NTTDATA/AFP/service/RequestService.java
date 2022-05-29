@@ -16,5 +16,7 @@ public interface RequestService {
 
     void delete(long id);
 
-    boolean validateAmount(ValidateAmount validateAmount);
+    boolean existsByDni(String dni);
+
+    short validateAmount(ValidateAmount validateAmount);
 }

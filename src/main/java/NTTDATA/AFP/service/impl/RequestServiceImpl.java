@@ -60,14 +60,21 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
-    public boolean validateAmount(ValidateAmount validateAmount) {
+    public boolean existsByDni(String dni) {
+        return requestRepository.existsByDni(dni);
+    }
+
+    @Override
+    public short validateAmount(ValidateAmount validateAmount) {
         CustomerAfp customerAfp = customerAfpService.findByDni(validateAmount.getDni());
 
-        double amountPocertange = customerAfp.getAmount() / 2;//obtenerlo por porcentaje
+        double minimumAmountAllowed = customerAfp.getAmount() * 0.50;
 
-        if(validateAmount.getAmount() > customerAfp.getAmount() || validateAmount.getAmount() < amountPocertange){
-            return false;
+        if(validateAmount.getAmount() > customerAfp.getAmount()){
+            return 1;
+        }else if(validateAmount.getAmount() < minimumAmountAllowed){
+            return -1;
         }
-        return true;
+        return 0;
     }
 }

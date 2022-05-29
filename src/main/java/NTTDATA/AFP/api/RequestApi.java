@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestController
 @RequestMapping(value = "request")
 public class RequestApi {
@@ -30,22 +33,34 @@ public class RequestApi {
     @PostMapping
     public ResponseEntity<Request> create(@Valid @RequestBody Request request){
 
-        if(customerAfpService.existsByDni(request.getDni())){
-            ValidateAfp validateAfp = new ValidateAfp(request.getDni(), request.getIdAfp());
-            if(customerAfpService.validateAfp(validateAfp)){
-                ValidateAmount validateAmount = new ValidateAmount(request.getDni(), request.getAmount());
-                if(requestService.validateAmount(validateAmount)){
-                    Request response = requestService.create(request);
-                    return new ResponseEntity<Request>(response, HttpStatus.CREATED);
+        if(!requestService.existsByDni(request.getDni())){
+            if(customerAfpService.existsByDni(request.getDni())){
+                ValidateAfp validateAfp = new ValidateAfp(request.getDni(), request.getIdAfp());
+                if(customerAfpService.validateAfp(validateAfp)){
+                    ValidateAmount validateAmount = new ValidateAmount(request.getDni(), request.getAmount());
+                    short responseValidateAmount = requestService.validateAmount(validateAmount);
+                    if(responseValidateAmount == 1){
+                        log.info("The request cannot be registered. Amount greater than allowed.");
+                        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    }else if(responseValidateAmount == -1){
+                        log.info("Minimum amount not covered please check the minimum amount to withdraw.");
+                        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                    }else{
+                        Request response = requestService.create(request);
+                        return new ResponseEntity<Request>(response, HttpStatus.CREATED);
+                    }
                 }else{
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);//Monto incorrecto
+                    log.info("DNI does not belong to this AFP.");
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
                 }
-            }else{
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);//Afp incorrecto
-            }
 
+            }else{
+                log.info("DNI not found.");
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         }else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);//DNI no existe
+            log.info("There is already a request with this DNI.");
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
