@@ -25,6 +25,6 @@ public class CustomerAfpServiceImpl implements CustomerAfpService {
 
     @Override
     public boolean validateAfp(ValidateAfp validateAfp) {
-        return customerAfpRepository.existsByDniAndIdAfp(validateAfp.getDni(), validateAfp.getIdAfp());
+        return customerAfpRepository.existsByDniAndAfp_id(validateAfp.getDni(), validateAfp.getIdAfp());
     }
 }

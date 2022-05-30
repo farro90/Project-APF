@@ -9,5 +9,5 @@ public interface CustomerAfpRepository extends JpaRepository<CustomerAfp, Long> 
 
     boolean existsByDni(@RequestParam("dni") String dni);
 
-    boolean existsByDniAndIdAfp(@RequestParam("dni") String dni, @RequestParam("idAfp") int idAfp);
+    boolean existsByDniAndAfp_id(@RequestParam("dni") String dni, @RequestParam("idAfp") long idAfp);
 }

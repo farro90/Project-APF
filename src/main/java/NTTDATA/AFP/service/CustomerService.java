@@ -15,5 +15,7 @@ public interface CustomerService {
 
     boolean existsByDni(String dni);
 
+    Customer findByDni(String dni);
+
     void delete(long id);
 }

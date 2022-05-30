@@ -52,6 +52,7 @@ public class RequestApi {
         Request requestExists = requestService.findById(request.getId());
         if(requestExists.getId() == 0){ throw new ModelNotFoundException("ID not found."); }
 
+        request.setAfp(afpService.findById(request.getAfp().getId()));
         validate(request);
 
         Request response = requestService.update(request);
@@ -81,13 +82,11 @@ public class RequestApi {
 
     private void validate(Request request){
 
-        if(!afpService.existsById(request.getIdAfp())) { throw new ModelNotFoundException("Id AFP does not exists."); }
-
         if(requestService.existsByDni(request.getDni())){ throw new ModelNotFoundException("There is already a request with this DNI."); }
 
         if(!customerAfpService.existsByDni(request.getDni())){ throw new ModelNotFoundException("DNI not found."); }
 
-        ValidateAfp validateAfp = new ValidateAfp(request.getDni(), request.getIdAfp());
+        ValidateAfp validateAfp = new ValidateAfp(request.getDni(), request.getAfp().getId());
         if(!customerAfpService.validateAfp(validateAfp)){ throw new ModelNotFoundException("DNI does not belong to this AFP."); }
 
         ValidateAmount validateAmount = new ValidateAmount(request.getDni(), request.getAmount());

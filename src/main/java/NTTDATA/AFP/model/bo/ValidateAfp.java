@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class ValidateAfp {
     private String dni;
-    private int idAfp;
+    private long idAfp;
 }
