@@ -34,41 +34,48 @@ public class RequestApi {
     @PostMapping
     public ResponseEntity<Request> create(@Valid @RequestBody Request request){
 
-        if(!requestService.existsByDni(request.getDni())){
-            if(customerAfpService.existsByDni(request.getDni())){
-                ValidateAfp validateAfp = new ValidateAfp(request.getDni(), request.getIdAfp());
-                if(customerAfpService.validateAfp(validateAfp)){
-                    ValidateAmount validateAmount = new ValidateAmount(request.getDni(), request.getAmount());
-                    short responseValidateAmount = requestService.validateAmount(validateAmount);
-                    if(responseValidateAmount == 1){
-                        throw new ModelNotFoundException("The request cannot be registered. Amount greater than allowed.");
-                    }else if(responseValidateAmount == -1){
-                        throw new ModelNotFoundException("Minimum amount not covered please check the minimum amount to withdraw.");
-                    }else{
-                        Request response = requestService.create(request);
-                        log.info("Request registered successfully.");
-                        return new ResponseEntity<Request>(response, HttpStatus.CREATED);
-                    }
-                }else{
-                    throw new ModelNotFoundException("DNI does not belong to this AFP.");
-                }
+        if(requestService.existsByDni(request.getDni())){ throw new ModelNotFoundException("There is already a request with this DNI."); }
 
-            }else{
-                throw new ModelNotFoundException("DNI not found.");
-            }
-        }else{
-            throw new ModelNotFoundException("There is already a request with this DNI.");
-        }
+        if(!customerAfpService.existsByDni(request.getDni())){ throw new ModelNotFoundException("DNI not found."); }
+
+        ValidateAfp validateAfp = new ValidateAfp(request.getDni(), request.getIdAfp());
+        if(!customerAfpService.validateAfp(validateAfp)){ throw new ModelNotFoundException("DNI does not belong to this AFP."); }
+
+        ValidateAmount validateAmount = new ValidateAmount(request.getDni(), request.getAmount());
+        short responseValidateAmount = requestService.validateAmount(validateAmount);
+        if(responseValidateAmount == 1){ throw new ModelNotFoundException("The request cannot be registered. Amount greater than allowed."); }
+
+        if(responseValidateAmount == -1){ throw new ModelNotFoundException("Minimum amount not covered please check the minimum amount to withdraw."); }
+
+        Request response = requestService.create(request);
+        log.info("Request registered successfully.");
+        return new ResponseEntity<Request>(response, HttpStatus.CREATED);
+
     }
 
     @PutMapping
     public ResponseEntity<Request> update(@Valid @RequestBody Request request){
+
         Request requestExists = requestService.findById(request.getId());
-        if(requestExists.getId() == 0){
-            throw new ModelNotFoundException("ID not found.");
-        }
+        if(requestExists.getId() == 0){ throw new ModelNotFoundException("ID not found."); }
+
+        if(requestService.existsByDni(request.getDni())){ throw new ModelNotFoundException("There is already a request with this DNI."); }
+
+        if(!customerAfpService.existsByDni(request.getDni())){ throw new ModelNotFoundException("DNI not found."); }
+
+        ValidateAfp validateAfp = new ValidateAfp(request.getDni(), request.getIdAfp());
+        if(!customerAfpService.validateAfp(validateAfp)){ throw new ModelNotFoundException("DNI does not belong to this AFP."); }
+
+        ValidateAmount validateAmount = new ValidateAmount(request.getDni(), request.getAmount());
+        short responseValidateAmount = requestService.validateAmount(validateAmount);
+        if(responseValidateAmount == 1){ throw new ModelNotFoundException("The request cannot be registered. Amount greater than allowed."); }
+
+        if(responseValidateAmount == -1){ throw new ModelNotFoundException("Minimum amount not covered please check the minimum amount to withdraw."); }
+
         Request response = requestService.update(request);
+        log.info("Request updated successfully.");
         return ResponseEntity.ok(response);
+
     }
 
     @GetMapping("/{id}")
