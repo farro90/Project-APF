@@ -1,5 +1,6 @@
 package NTTDATA.AFP.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.Date;
 
-//@Schema(description = "Información de Persona")
+@Schema(description = "AFP association information")
 @Data
 @Entity
 @Table(name = "customersafp")
@@ -17,21 +18,21 @@ public class CustomerAfp {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    //@Schema(description = "Customer DNI")
+    @Schema(description = "Customer DNI")
     @Pattern(regexp = "^[0-9]*$", message = "DNI must contain only numeric digits.")
     @Size(min = 8, max = 8, message = "DNI must have 8 digits.")
     @Column(name = "dni", nullable = false, length = 8, unique = true)
     private String dni;
 
-    //@Schema(description = "Amount Available")
+    @Schema(description = "Amount Available")
     @Column(name = "amountAvailable", nullable = false)
     private double amount;
 
-    //@Schema(description = "Retirement Date")
+    @Schema(description = "Retirement Date")
     @Column(name = "retirementDate")
     private Date retirementDate;
 
-    //@Schema(description = "Account Number")
+    @Schema(description = "Account Number")
     @Column(name = "accountNumber", nullable = false)
     private String accountNumber;
 
