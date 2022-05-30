@@ -31,7 +31,6 @@ public class Request {
     private double amount;
 
     //@Schema(description = "createDate")
-    @NotNull(message = "Create date can not be null.")
     @Column(name = "createDate")
     private Date createDate;
 
@@ -40,7 +39,7 @@ public class Request {
     private Date modifyDate;
 
     @NotNull(message = "AFP can not be null.")
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @ManyToOne(cascade = {CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "afp_id", nullable = false)
     private Afp afp;
 

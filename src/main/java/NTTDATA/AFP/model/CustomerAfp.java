@@ -23,10 +23,6 @@ public class CustomerAfp {
     @Column(name = "dni", nullable = false, length = 8, unique = true)
     private String dni;
 
-    //@Schema(description = "Id AFP")
-    @Column(name = "idAfp", nullable = false)
-    private int idAfp;
-
     //@Schema(description = "Amount Available")
     @Column(name = "amountAvailable", nullable = false)
     private double amount;
@@ -39,7 +35,7 @@ public class CustomerAfp {
     @Column(name = "accountNumber", nullable = false)
     private String accountNumber;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @ManyToOne(cascade = {CascadeType.MERGE}, optional = false)
     @JoinColumn(name = "afp_id", nullable = false)
     private Afp afp;
 

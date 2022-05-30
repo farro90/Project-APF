@@ -1,7 +1,6 @@
 package NTTDATA.AFP.api;
 
 import NTTDATA.AFP.exception.ModelNotFoundException;
-import NTTDATA.AFP.model.Afp;
 import NTTDATA.AFP.model.Customer;
 import NTTDATA.AFP.service.AfpService;
 import NTTDATA.AFP.service.CustomerAfpService;
