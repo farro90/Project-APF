@@ -41,4 +41,20 @@ public class Customer {
     @Size(min = 3, max = 70, message = "Email must have at least 3 characters.")
     @Column(name = "email", nullable = false, length = 70)
     private String email;
+
+    //@Schema(description = "Id AFP")
+    @Column(name = "idAfp", nullable = false)
+    private int idAfp;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "afp_id", nullable = false)
+    private Afp afp;
+
+    public Afp getAfp() {
+        return afp;
+    }
+
+    public void setAfp(Afp afp) {
+        this.afp = afp;
+    }
 }

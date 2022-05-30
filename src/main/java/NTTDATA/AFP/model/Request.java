@@ -38,4 +38,16 @@ public class Request {
     //@Schema(description = "modifyDate")
     @Column(name = "modifyDate")
     private Date modifyDate;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "afp_id", nullable = false)
+    private Afp afp;
+
+    public Afp getAfp() {
+        return afp;
+    }
+
+    public void setAfp(Afp afp) {
+        this.afp = afp;
+    }
 }

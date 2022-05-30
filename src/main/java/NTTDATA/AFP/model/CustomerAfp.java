@@ -10,7 +10,7 @@ import java.util.Date;
 //@Schema(description = "Información de Persona")
 @Data
 @Entity
-@Table(name = "customersAFP")
+@Table(name = "customersafp")
 public class CustomerAfp {
 
     @Id
@@ -23,7 +23,7 @@ public class CustomerAfp {
     @Column(name = "dni", nullable = false, length = 8, unique = true)
     private String dni;
 
-    //@Schema(description = "id AFP")
+    //@Schema(description = "Id AFP")
     @Column(name = "idAfp", nullable = false)
     private int idAfp;
 
@@ -38,4 +38,16 @@ public class CustomerAfp {
     //@Schema(description = "Account Number")
     @Column(name = "accountNumber", nullable = false)
     private String accountNumber;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, optional = false)
+    @JoinColumn(name = "afp_id", nullable = false)
+    private Afp afp;
+
+    public Afp getAfp() {
+        return afp;
+    }
+
+    public void setAfp(Afp afp) {
+        this.afp = afp;
+    }
 }

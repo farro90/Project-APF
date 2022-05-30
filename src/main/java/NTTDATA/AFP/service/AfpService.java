@@ -9,4 +9,6 @@ public interface AfpService {
     List<Afp> findAll();
 
     Afp findById(long id);
+
+    boolean existsById(long id);
 }

@@ -4,6 +4,7 @@ import NTTDATA.AFP.exception.ModelNotFoundException;
 import NTTDATA.AFP.model.Request;
 import NTTDATA.AFP.model.bo.ValidateAfp;
 import NTTDATA.AFP.model.bo.ValidateAmount;
+import NTTDATA.AFP.service.AfpService;
 import NTTDATA.AFP.service.CustomerAfpService;
 import NTTDATA.AFP.service.RequestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class RequestApi {
 
     @Autowired
     CustomerAfpService customerAfpService;
+
+    @Autowired
+    AfpService afpService;
 
     @GetMapping
     public ResponseEntity<List<Request>> findAll(){
@@ -76,6 +80,9 @@ public class RequestApi {
     }
 
     private void validate(Request request){
+
+        if(!afpService.existsById(request.getIdAfp())) { throw new ModelNotFoundException("Id AFP does not exists."); }
+
         if(requestService.existsByDni(request.getDni())){ throw new ModelNotFoundException("There is already a request with this DNI."); }
 
         if(!customerAfpService.existsByDni(request.getDni())){ throw new ModelNotFoundException("DNI not found."); }

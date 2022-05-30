@@ -34,6 +34,11 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    public boolean existsByDni(String dni) {
+        return customerRepository.existsByDni(dni);
+    }
+
+    @Override
     public void delete(long id) {
         customerRepository.deleteById(id);
     }

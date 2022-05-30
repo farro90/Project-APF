@@ -25,4 +25,7 @@ public class AfpServiceImpl implements AfpService {
         Optional<Afp> op = afpRepository.findById(id);
         return op.isPresent() ? op.get() : new Afp();
     }
+
+    @Override
+    public boolean existsById(long id) { return afpRepository.existsById(id); }
 }
